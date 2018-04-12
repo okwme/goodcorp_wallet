@@ -7,7 +7,18 @@
     <router-view/>
   </div>
 </template>
-
+<script>
+import {mapActions} from 'vuex'
+export default {
+  name: 'App',
+  mounted () {
+    this.init()
+  },
+  methods: {
+    ...mapActions(['init'])
+  }
+}
+</script>
 <style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

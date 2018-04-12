@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "app": "node app.js",
+    "concurrently": "concurrently --kill-others \"npm run app\" \"vnpm run serve\"",
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test",
@@ -11,7 +13,9 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
-    "register-service-worker": "^1.0.0",
+    "coins": "github:okwme/coins",
+    "lotion": "^0.1.18",
+    "shea": "0.0.13",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
@@ -26,6 +30,7 @@
     "@vue/eslint-config-standard": "^3.0.0-beta.6",
     "@vue/test-utils": "^1.0.0-beta.10",
     "chai": "^4.1.2",
+    "concurrently": "^3.5.1",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "vue-template-compiler": "^2.5.13"
