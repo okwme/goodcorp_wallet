@@ -10,7 +10,7 @@ app.use(coins({
   // coins options
   name: 'goodcoin',
   initialBalances: {
-    'Q63F7qhMtouaC53zLNjFinZ5mgBzaAJuo': 21000000
+    'JBYbC4xJvQk5Pmrt86K6ixzKrn7cRB9WT': 21000000
   }
 }))
 

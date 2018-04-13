@@ -87,20 +87,40 @@ export default new Vuex.Store({
     },
     decryptPrivateKey ({state}) {
       if (!state.privateKeyHash || !state.pin) return false
-      var bytes  = CryptoJS.AES.decrypt(state.privateKeyHash.toString(), state.pin)
+      var bytes  = CryptoJS.AES.decrypt(state.privateKeyHash.toString('hex'), state.pin)
       return bytes.toString(CryptoJS.enc.Utf8)
     },
     getState ({state, commit}) {
       fetch('/state').then(async res=>{
         let chainState = await res.json()
-        let chainStateHash = CryptoJS.MD5(chainState)
-        if(state.chainStateHash !== chainStateHash.toString()) {
+        let chainStateHash = CryptoJS.MD5(JSON.stringify(chainState)).toString()
+        if(state.chainStateHash !== chainStateHash) {
           commit('SET_CHAIN_STATE', chainState)
-          commit('SET_CHAIN_STATE_HASH', chainStateHash.toString())
+          commit('SET_CHAIN_STATE_HASH', chainStateHash)
         }
       })
     },
+    send ({state, dispatch}, {account, amount}) {
+
+      let tx = {
+        from: {
+          amount: parseInt(amount),
+          sequence: state.chainState.accounts[state.address].sequence,
+          pubkey: secp256k1.publicKeyCreate(Buffer.from(state.privateKey, 'hex'))
+        },
+        to: {
+          amount: parseInt(amount),
+          address: account
+        }
+      }
+
+      // sign tx
+      let sigHash = coins.getSigHash(tx)
+      tx.from.signature = secp256k1.sign(sigHash, Buffer.from(state.privateKey, 'hex')).signature
+      dispatch('sendTx', tx)
+    },
     sendTx ({}, tx) {
+      console.log(tx)
       return fetch('/txs', {
         headers: {
           'Accept': 'application/json',
@@ -108,7 +128,12 @@ export default new Vuex.Store({
         },
         method: 'post',
         body: JSON.stringify(tx)
-      }).then(res => res.json())
+      }).then(async res => {
+        console.log(res)
+        console.log(await res.json())
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   },
   plugins: [createPersistedState({
