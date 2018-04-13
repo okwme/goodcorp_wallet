@@ -1,0 +1,91 @@
+<template lang="pug">
+  #unlock
+    template(v-if="privateKeyHash")
+      label Enter Pin
+      input(v-model="pin" type="password")
+    template(v-else)
+      div
+        label Enter Private Key 
+          a(@click.stop="generate()" href="#") (New)
+          input(v-model="privateKey" type="password")
+      div
+        label Create New Pin
+          input(v-model="pin" type="password")
+    div
+      input(type="submit" @click="submit()")
+    a(@click.stop="reset()" href="#") Reset
+</template>
+
+<script>
+import secp256k1 from 'secp256k1'
+const { randomBytes } = require('crypto')
+import {mapActions, mapState, mapGetters, mapMutations} from 'vuex'
+export default {
+
+  name: 'Unlock',
+
+  data () {
+    return {
+    }
+  },
+  computed: {
+    ...mapState([
+      'privateKeyHash'
+    ]),
+    pin: {
+      get () {
+        return this.$store.state.pin
+      },
+      set (newVal) {
+        this.setPin(newVal)
+      }
+    },
+    privateKey: {
+      get () {
+        return this.$store.state.privateKey
+      },
+      set (newVal) {
+        this.setPrivateKey(newVal)
+      }
+    }
+  },
+  methods: {
+    generate () {
+      let foo
+      do {
+        console.log('try')
+        foo = randomBytes(32)
+        this.privateKey = foo.toString('hex')
+        console.log(this.privateKey)
+      } while (!secp256k1.privateKeyVerify(foo))
+    },
+    reset () {
+      this.setPin(null)
+      this.setPrivateKey(null)
+      this.setPrivateKeyHash(null)
+    },
+    submit () {
+      this.privateKeyHash ? this.login() : this.hashPrivateKey()
+    },
+    ...mapMutations({
+      'setPin': 'SET_PIN',
+      'setPrivateKey': 'SET_PRIVATE_KEY',
+      'setPrivateKeyHash': 'SET_PRIVATE_KEY_HASH'
+    }),
+    ...mapActions([
+      'hashPrivateKey',
+      'login'
+    ])
+  }
+}
+</script>
+
+<style lang="css" scoped>
+div {
+  text-align: center;
+}
+input {
+  display: block;
+  margin:auto;
+}
+</style>
