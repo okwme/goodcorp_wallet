@@ -11,11 +11,10 @@
         ) {{trim(acct.address)}} - {{acct.balance}}
   .right
     form(@submit.prevent="send({account:to, amount: amt})")
-      #account
-        label account 
+      #account 
         input(v-model="address" readonly type="text")
       #balance
-        label balance 
+        label.block balance 
         input(v-model="balance" readonly type="number")
       #to
         label to 
@@ -24,7 +23,8 @@
         label amt 
         input(v-model="amt" type="text")
       #send
-        input(type="submit" value="SEND")
+        input(type="image" src="/img/send.png" value="SEND")
+      img(src="/img/arrow.png")
 </template>
 
 <script>
@@ -44,8 +44,12 @@ export default {
       'address',
       'chainState'
     ]),
+    account () {
+      return this.chainState && this.chainState.accounts[this.address]
+    },
     balance () {
-      return this.chainState.accounts[this.address].balance
+      console.log(this.account)
+      return this.account ? this.account.balance : 0
     },
     walletList () {
       return this.chainState && Object.keys(this.chainState.accounts).map((a) => {
@@ -60,7 +64,7 @@ export default {
       'send'
     ]),
     trim (str) {
-      return str.substring(0, 8) + '…'
+      return str.substring(0, 8)
     },
     pick (i) {
       console.log(this.walletList[i])
@@ -72,10 +76,42 @@ export default {
 
 <style lang="scss" scoped>
 #wallet {
-  width:100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   .left, .right {
-    display: inline-block;
-    width:50%;
+      min-width: 500px;
+      max-width: 500px;
+      flex-basis: auto; /* default value */
+      flex-grow: 1;
+  }
+  .left {
+    // min-width: 450px;
+    // max-width: 450px;
+  }
+  .right {
+    text-align: right;
+    margin-left:50px;
+    .block {
+      display: block;
+      margin-right:50px;
+    }
+    input[type="image"] {
+      margin-left:290px;
+      margin-right: 0px;
+    }
+    img {
+      position:relative;
+      left:105px;
+    }
+  }
+  #list{
+    text-align:left;
+    margin-top:50px;
+    margin-left:160px;
+    a {
+      // font-family: courier;
+    }
   }
 }
 </style>

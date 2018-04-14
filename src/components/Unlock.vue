@@ -12,7 +12,7 @@
         label Create New Pin
           input(v-model="pin" type="password")
     div
-      input(type="submit" @click="submit()")
+      input(type="image" src="/img/submit.png"  @click="submit()")
     a(@click.stop="reset()" href="#") Reset
 </template>
 
@@ -86,6 +86,7 @@ div {
 }
 input {
   display: block;
-  margin:auto;
+  margin-left:auto;
+  margin-right:auto;
 }
 </style>
