@@ -13,6 +13,7 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "coins": "github:okwme/coins",
     "crypto-js": "^3.1.9-1",
     "lotion": "^0.1.18",

@@ -10,7 +10,7 @@
         :key="acct.address"
         ) {{trim(acct.address)}} - {{acct.balance}}
   .right
-    form(@submit.prevent="send({account:to, amount: amt})")
+    form(@submit.prevent="submit({account:to, amount: amt})")
       #account 
         input(v-model="address" readonly type="text")
       #balance
@@ -21,7 +21,7 @@
         input(v-model="to" type="text")
       #amt
         label amt 
-        input(v-model="amt" type="text")
+        input(v-model="amt" type="number")
       #send
         input(type="image" src="/img/send.png" value="SEND")
       img(src="/img/arrow.png")
@@ -36,19 +36,19 @@ export default {
   data () {
     return {
       to: null,
-      amt: null
+      amt: 0
     }
   },
   computed: {
     ...mapState([
       'address',
-      'chainState'
+      'chainState',
+      'sending'
     ]),
     account () {
       return this.chainState && this.chainState.accounts[this.address]
     },
     balance () {
-      console.log(this.account)
       return this.account ? this.account.balance : 0
     },
     walletList () {
@@ -61,13 +61,30 @@ export default {
   },
   methods: {
     ...mapActions([
-      'send'
+      'send',
+      'setError'
     ]),
+    submit (tx) {
+      if (this.sending) return
+      if (!this.to || this.to === '') {
+        this.setError('WHOM TO?')
+        return
+      }
+      if (!this.amt || this.amt === 0 || this.amt > this.balance) {
+        this.setError('Please select a valid amount')
+        return
+      }
+      this.send(tx).then((res) => {
+        console.log(res)
+        this.amt = 0
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
     trim (str) {
       return str.substring(0, 8)
     },
     pick (i) {
-      console.log(this.walletList[i])
       this.to = this.walletList[i].address
     }
   }
@@ -77,7 +94,6 @@ export default {
 <style lang="scss" scoped>
 #wallet {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   .left, .right {
       min-width: 500px;
@@ -109,6 +125,8 @@ export default {
     text-align:left;
     margin-top:50px;
     margin-left:160px;
+    max-height:200px;
+    overflow: auto;
     a {
       // font-family: courier;
     }

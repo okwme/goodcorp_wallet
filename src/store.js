@@ -4,6 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 import coins from 'coins'
 import secp256k1 from 'secp256k1'
 import CryptoJS from 'crypto-js'
+import axios from 'axios'
 
 Vue.use(Vuex)
 let interval
@@ -18,9 +19,21 @@ export default new Vuex.Store({
     pin: null,
     address: null,
     chainState: null,
-    chainStateHash: null
+    chainStateHash: null,
+    status: null,
+    error: null,
+    sending: false
   },
   mutations: {
+    UPDATE_SENDING (state, sending) {
+      state.sending = sending
+    },
+    UPDATE_ERROR (state, error) {
+      state.error = error
+    },
+    UPDATE_STATUS (state, status) {
+      state.status = status
+    },
     SET_CHAIN_STATE (state, chainState) {
       state.chainState = chainState
     },
@@ -58,37 +71,61 @@ export default new Vuex.Store({
       }, 1000)
     },
     async login ({dispatch, commit}) {
-      let privKey = await dispatch('decryptPrivateKey')
-      let privKeyBuffer = Buffer.from(privKey, 'hex')
-      if (secp256k1.privateKeyVerify(privKeyBuffer)) {
-        commit('UPDATE_ADDRESS', coins.wallet(privKeyBuffer).address())
-        commit('SET_PRIVATE_KEY', privKey)
-      } else {
-        alert('Please try again')
+      try {
+        let privKey = await dispatch('decryptPrivateKey')
+        let privKeyBuffer = Buffer.from(privKey, 'hex')
+        if (secp256k1.privateKeyVerify(privKeyBuffer)) {
+          commit('UPDATE_ADDRESS', coins.wallet(privKeyBuffer).address())
+          commit('SET_PRIVATE_KEY', privKey)
+        } else {
+          dispatch('setError', 'Incorrect credentials, please try again')
+        }
+      } catch (error) {
+        dispatch('setError', error)
       }
     },
-    hashPrivateKey ({state, commit}) {
+    setError ({commit}, error) {
+      commit('UPDATE_ERROR', error)
+      if (error) {
+        setTimeout(() => {
+          commit('UPDATE_ERROR', null)
+        }, 3000)
+      }
+    },
+    setStatus ({commit}, status) {
+      commit('UPDATE_STATUS', status)
+      if (status) {
+        setTimeout(() => {
+          commit('UPDATE_STATUS', null)
+        }, 3000)
+      }
+    },
+    hashPrivateKey ({state, commit, dispatch}) {
       if (state.pin.length < 4) {
-        alert('Please make sure your pin is more than 4 characters long')
+        dispatch('setError', 'Please make sure your pin is more than 4 characters long')
         return false
       }
       if (!isHex(state.privateKey)) {
-        alert('Please make sure your private key is valid')
+        dispatch('setError', 'Please make sure your private key is valid')
         return false
       }
       let privKey = Buffer.from(state.privateKey, 'hex')
       if (!secp256k1.privateKeyVerify(privKey)) {
-        alert('Please make sure your private key is valid')
+        dispatch('setError', 'Please make sure your private key is valid')
         return false
       }
       commit('UPDATE_ADDRESS', coins.wallet(privKey).address())
       commit('SET_PRIVATE_KEY_HASH', CryptoJS.AES.encrypt(state.privateKey, state.pin).toString())
       return true
     },
-    decryptPrivateKey ({state}) {
+    decryptPrivateKey ({state, dispatch}) {
       if (!state.privateKeyHash || !state.pin) return false
-      var bytes  = CryptoJS.AES.decrypt(state.privateKeyHash.toString('hex'), state.pin)
-      return bytes.toString(CryptoJS.enc.Utf8)
+      try {
+        var bytes  = CryptoJS.AES.decrypt(state.privateKeyHash.toString('hex'), state.pin)
+        return bytes.toString(CryptoJS.enc.Utf8)
+      } catch (error) {
+        dispatch('setError', error)
+      }
     },
     getState ({state, commit}) {
       fetch('/state').then(async res=>{
@@ -100,8 +137,9 @@ export default new Vuex.Store({
         }
       })
     },
-    send ({state, dispatch}, {account, amount}) {
-
+    send ({state, dispatch, commit}, {account, amount}) {
+      if (state.sending) return
+      commit('UPDATE_SENDING', true)
       let tx = {
         from: {
           amount: parseInt(amount),
@@ -117,22 +155,25 @@ export default new Vuex.Store({
       // sign tx
       let sigHash = coins.getSigHash(tx)
       tx.from.signature = secp256k1.sign(sigHash, Buffer.from(state.privateKey, 'hex')).signature
-      dispatch('sendTx', tx)
+      return dispatch('sendTx', tx)
     },
-    sendTx ({}, tx) {
-      console.log(tx)
-      return fetch('/txs', {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'post',
-        body: JSON.stringify(tx)
-      }).then(async res => {
-        console.log(res)
-        console.log(await res.json())
-      }).catch((err) => {
-        console.log(err)
+    sendTx ({dispatch, commit}, tx) {
+      dispatch('setStatus', 'Sending')
+      return new Promise((resolve, reject) => {
+        axios.post('/txs', tx).then((res) => {
+          commit('UPDATE_SENDING', false)
+          console.log(res)
+          if (res.data.result.check_tx.code === 2) {
+            dispatch('setStatus', res.data.result.check_tx.log)
+            reject()
+          } else {
+            dispatch('setStatus', 'Success')
+            resolve()
+          }
+        }).catch((error) => {
+          commit('UPDATE_SENDING', false)
+          reject(error)
+        })
       })
     }
   },

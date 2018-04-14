@@ -1,5 +1,5 @@
 <template lang="pug">
-  #unlock
+  form#unlock(@submit.prevent="submit")
     template(v-if="privateKeyHash")
       label Enter Pin
       input(v-model="pin" type="password")
@@ -7,12 +7,12 @@
       div
         label Enter Private Key 
           a(@click.stop="generate()" href="#") (New)
-          input(v-model="privateKey" type="password")
+          input(v-model="privateKey" type="text")
       div
         label Create New Pin
-          input(v-model="pin" type="password")
+          input(v-model="pin" type="text")
     div
-      input(type="image" src="/img/submit.png"  @click="submit()")
+      input(type="image" src="/img/submit.png")
     a(@click.stop="reset()" href="#") Reset
 </template>
 
@@ -81,12 +81,13 @@ export default {
 </script>
 
 <style lang="css" scoped>
-div {
+form {
   text-align: center;
 }
 input {
   display: block;
   margin-left:auto;
   margin-right:auto;
+  text-align: center;
 }
 </style>

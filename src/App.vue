@@ -3,12 +3,14 @@
     #header GOODCORP
     wallet(v-if="unlocked")
     unlock(v-else) 
+    h4#error(@click="setError(null)" v-if="error") {{error}}
+    h4#status(@click="setStatus(null)" v-if="status") {{status}}
 </template>
 
 <script>
 import Wallet from '@/components/Wallet'
 import Unlock from '@/components/Unlock'
-import {mapActions, mapState, mapGetters} from 'vuex'
+import {mapActions, mapState, mapGetters, mapMutations} from 'vuex'
 export default {
   name: 'App',
   data () {
@@ -27,14 +29,20 @@ export default {
     ...mapState([
       'chainState',
       'accounts',
-      'address'
+      'address',
+      'error',
+      'status'
     ]),
     ...mapGetters([
       'unlocked'
     ])
   },
   methods: {
-    ...mapActions(['init'])
+    ...mapActions([
+      'init',
+      'setError',
+      'setStatus'
+    ])
   },
   components: {
     Wallet,
@@ -57,6 +65,7 @@ body {
 label {
   font-size:48px;
   line-height:1.5em;
+  vertical-align: bottom;
   color: $light;
   text-shadow: 2px 2px 2px #000;
   text-transform: uppercase;
@@ -70,6 +79,7 @@ a {
   text-shadow: 2px 2px 2px #000; 
   text-decoration: none;
 }
+*:focus {outline:0;}
 #list,
 input[type="text"],
 input[type="number"],
@@ -81,10 +91,10 @@ input[type="submit"] {
   line-height:1.5em;
   font-family: arial black;
   // letter-spacing:.1em;
-  text-align: center;
-  margin:5px 5px;
+  text-align: right;
+  margin:0px 5px 10px 5px;
   background-color: $dark;
-  color: $med;
+  color: $light;
   border: none;
   border-radius: 5px;
   padding:5px;
@@ -92,9 +102,6 @@ input[type="submit"] {
   -webkit-box-shadow: inset 2px 2px 2px 0px #000;
   -moz-box-shadow: inset 2px 2px 2px 0px #000;
   box-shadow: inset 2px 2px 2px 0px #000;
-}
-#list a {
-  color: $med;
 }
 input[type="image"],
 input[type="submit"] {
@@ -113,17 +120,21 @@ input[type="submit"] {
 }
 #header {
   font-size: 132px;
-  line-height:1.5em;
+  line-height:1em;
   color: $light;
   text-shadow: 2px 2px 2px #000;
   // max-width:1160px;
   text-align: center;
-  margin: 30px auto;
+  margin: 0px 0px 50px 0px ;
 }
-#app {
-
+#error {
+  text-align: center;
+  color: red;
+  cursor: pointer;
 }
-#nav {
-
+#status {
+  text-align: center;
+  color: green;
+  cursor: pointer;
 }
 </style>

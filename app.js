@@ -10,7 +10,8 @@ app.use(coins({
   // coins options
   name: 'goodcoin',
   initialBalances: {
-    'FimJYXvz1EBHanfjLpP5eU85GwzXof1ce': 21000000
+    'FimJYXvz1EBHanfjLpP5eU85GwzXof1ce': 21000000,
+    '3HpfwsgoECnjSXBN4HAS1o87HxErQMQAc': 0 // a8c0dc680c9aee04cc1a280a9305959d0764fe56ebd0ba98358c91b172eebcc5
   }
 }))
 
