@@ -5,7 +5,7 @@ import coins from 'coins'
 import secp256k1 from 'secp256k1'
 import CryptoJS from 'crypto-js'
 import axios from 'axios'
-
+axios.defaults.withCredentials = true
 Vue.use(Vuex)
 let interval
 const isHex = function (inputString) {
@@ -128,8 +128,11 @@ export default new Vuex.Store({
       }
     },
     getState ({state, commit}) {
-      fetch('/state').then(async res=>{
-        let chainState = await res.json()
+
+      axios.get('/state', {mode: 'no-cors'}).then(res=>{
+        console.log(res)
+        let chainState = res.data
+        console.log(chainState)
         let chainStateHash = CryptoJS.MD5(JSON.stringify(chainState)).toString()
         if(state.chainStateHash !== chainStateHash) {
           commit('SET_CHAIN_STATE', chainState)
