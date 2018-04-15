@@ -119,14 +119,17 @@ input[type="submit"] {
   text-align: center;
   margin: 0px 0px 50px 0px ;
 }
-#error {
+
+#error, #status {
   text-align: center;
-  color: red;
+  margin:0;
+  margin-top:-1em;
   cursor: pointer;
 }
+#error {
+  color: red;
+}
 #status {
-  text-align: center;
   color: green;
-  cursor: pointer;
 }
 </style>
