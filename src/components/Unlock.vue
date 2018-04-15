@@ -2,15 +2,15 @@
   form#unlock(@submit.prevent="submit")
     template(v-if="privateKeyHash")
       label Enter Pin
-      input(v-model="pin" type="password")
+      input#pin(v-model="pin" type="password")
     template(v-else)
       div
         label Enter Private Key 
           a(@click.stop="generate()" href="#") (New)
-          input(v-model="privateKey" type="text")
+          input#privkey(v-model="privateKey" type="text")
       div
         label Create New Pin
-          input(v-model="pin" type="text")
+          input#newpin(v-model="pin" type="text")
     div
       input(type="image" src="/img/submit.png")
     a(@click.stop="reset()" href="#") Reset
@@ -53,10 +53,8 @@ export default {
     generate () {
       let foo
       do {
-        console.log('try')
         foo = randomBytes(32)
         this.privateKey = foo.toString('hex')
-        console.log(this.privateKey)
       } while (!secp256k1.privateKeyVerify(foo))
     },
     reset () {

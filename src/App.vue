@@ -1,6 +1,6 @@
 <template lang="pug">
   #app
-    #header GOODCORP
+    h1#header GOODCORP
     wallet(v-if="unlocked")
     unlock(v-else) 
     h4#error(@click="setError(null)" v-if="error") {{error}}
@@ -10,7 +10,7 @@
 <script>
 import Wallet from '@/components/Wallet'
 import Unlock from '@/components/Unlock'
-import {mapActions, mapState, mapGetters, mapMutations} from 'vuex'
+import {mapActions, mapState, mapGetters} from 'vuex'
 export default {
   name: 'App',
   data () {
@@ -20,16 +20,8 @@ export default {
   mounted () {
     this.init()
   },
-  watch: {
-    chainState () {
-      console.log('chainState changed')
-    }
-  },
   computed: {
     ...mapState([
-      'chainState',
-      'accounts',
-      'address',
       'error',
       'status'
     ]),

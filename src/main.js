@@ -4,7 +4,9 @@ import store from './store'
 
 Vue.config.productionTip = false
 
-new Vue({
+const app = new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+if (process.env === 'DEV') window.app = app

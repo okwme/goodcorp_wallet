@@ -13,15 +13,15 @@
     form(@submit.prevent="submit({account:to, amount: amt})")
       #account 
         input(v-model="address" readonly type="text")
-      #balance
+      div
         label.block balance 
-        input(v-model="balance" readonly type="number")
-      #to
+        input#balance(v-model="balance" readonly type="number")
+      div
         label to 
-        input(v-model="to" type="text")
-      #amt
+        input#to(v-model="to" type="text")
+      div
         label amt 
-        input(v-model="amt" type="number")
+        input#amt(v-model="amt" type="number")
       #send
         input(type="image" src="/img/send.png" value="SEND")
       img(src="/img/arrow.png")
