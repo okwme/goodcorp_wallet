@@ -128,11 +128,8 @@ export default new Vuex.Store({
       }
     },
     getState ({state, commit}) {
-
       axios.get('/state', {mode: 'no-cors'}).then(res=>{
-        console.log(res)
         let chainState = res.data
-        console.log(chainState)
         let chainStateHash = CryptoJS.MD5(JSON.stringify(chainState)).toString()
         if(state.chainStateHash !== chainStateHash) {
           commit('SET_CHAIN_STATE', chainState)
@@ -165,7 +162,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.post('/txs', tx).then((res) => {
           commit('UPDATE_SENDING', false)
-          console.log(res)
           if (res.data.check_tx.code === 2) {
             dispatch('setStatus', res.data.check_tx.log)
             reject()
