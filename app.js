@@ -21,7 +21,7 @@ app.useBlock(function (state, chainInfo) {
 
 app.use(shea('public/'))
 
-let port = process.env.PORT || 3000
+let port = process.env.PRODUCTION ? 80 : 3000
 app.listen(port).then(({ GCI }) => {
   console.log('App GCI:', GCI)
   console.log('localhost:' + port)
