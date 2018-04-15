@@ -24,7 +24,7 @@ app.use(shea('public/'))
 let port = process.env.PORT || 3000
 app.listen(port).then(({ GCI }) => {
   console.log('App GCI:', GCI)
-  console.log('0.0.0.0:' + port)
+  console.log('localhost:' + port)
 })
 
 

@@ -163,8 +163,8 @@ export default new Vuex.Store({
         axios.post('/txs', tx).then((res) => {
           commit('UPDATE_SENDING', false)
           console.log(res)
-          if (res.data.result.check_tx.code === 2) {
-            dispatch('setStatus', res.data.result.check_tx.log)
+          if (res.data.check_tx.code === 2) {
+            dispatch('setStatus', res.data.check_tx.log)
             reject()
           } else {
             dispatch('setStatus', 'Success')
