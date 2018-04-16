@@ -101,11 +101,11 @@ export default new Vuex.Store({
       }
     },
     hashPrivateKey ({state, commit, dispatch}) {
-      if (state.pin.length < 4) {
+      if (!state.pin || state.pin.length < 4) {
         dispatch('setError', 'Please make sure your pin is more than 4 characters long')
         return false
       }
-      if (!isHex(state.privateKey)) {
+      if (!state.privateKey || !isHex(state.privateKey)) {
         dispatch('setError', 'Please make sure your private key is valid')
         return false
       }

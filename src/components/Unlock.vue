@@ -13,7 +13,7 @@
           input#newpin(v-model="pin" type="text")
     div
       input(type="image" src="/img/submit.png")
-    a(@click.stop="reset()" href="#") Reset
+    a#reset(@click.stop="reset()" href="#") Reset
 </template>
 
 <script>
@@ -87,5 +87,9 @@ input {
   margin-left:auto;
   margin-right:auto;
   text-align: center;
+}
+#reset {
+  display:block;
+  padding-bottom:2em;
 }
 </style>
