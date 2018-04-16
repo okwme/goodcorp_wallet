@@ -1,4 +1,5 @@
 # Goodcorp wallet
+* https://goodcorp.netlify.com/
 
 ## Balanced User #1
 * account: FimJYXvz1EBHanfjLpP5eU85GwzXof1ce
