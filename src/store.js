@@ -68,7 +68,7 @@ export default new Vuex.Store({
       if (interval) clearInterval(interval)
       interval = setInterval(() => {
         dispatch('getState')
-      }, 1000)
+      }, 5000)
     },
     async login ({dispatch, commit}) {
       try {
@@ -162,6 +162,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.post('/txs', tx).then((res) => {
           commit('UPDATE_SENDING', false)
+          dispatch('getState')
           if (res.data.check_tx.code === 2) {
             dispatch('setStatus', res.data.check_tx.log)
             reject()

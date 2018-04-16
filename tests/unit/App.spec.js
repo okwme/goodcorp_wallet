@@ -3,11 +3,9 @@
 // import App from '@/App.vue'
 
 // describe('App.vue', () => {
-//   it('renders props.msg when passed', () => {
+//   it('renders header', () => {
 //     const msg = 'goodcorp'
-//     const wrapper = shallow(App, {
-//       propsData: { msg }
-//     })
+//     const wrapper = shallow(App)
 //     expect(wrapper.text()).to.include(msg)
 //   })
 // })

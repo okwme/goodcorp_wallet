@@ -70,7 +70,7 @@ export default {
         this.setError('WHOM TO?')
         return
       }
-      if (!this.amt || this.amt === 0 || this.amt > this.balance) {
+      if (!this.amt || this.amt === '0' || this.amt > this.balance) {
         this.setError('Please select a valid amount')
         return
       }
