@@ -13,8 +13,8 @@
 * 59921841c1cfb64833d8d5ce4f492ba0d8bb160df3ba92868a7914e015e2cd36
 
 ## Shea Gateway
-* GET https://shea.kep.io/59921841c1cfb64833d8d5ce4f492ba0d8bb160df3ba92868a7914e015e2cd36/state
-* POST https://shea.kep.io/59921841c1cfb64833d8d5ce4f492ba0d8bb160df3ba92868a7914e015e2cd36/txs
+* GET http://shea.kep.io/709e659d41e7e69da98a4406154732d1d86c27dd8637dd83ffc3c8c71b7196df/state
+* POST https://shea.kep.io/709e659d41e7e69da98a4406154732d1d86c27dd8637dd83ffc3c8c71b7196df/txs
 
 ## Server Repo
 * https://github.com/okwme/goodcorp_server
