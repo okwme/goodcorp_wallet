@@ -10,11 +10,11 @@
 * privkey: a8c0dc680c9aee04cc1a280a9305959d0764fe56ebd0ba98358c91b172eebcc5
 
 ## App GCI
-* 59921841c1cfb64833d8d5ce4f492ba0d8bb160df3ba92868a7914e015e2cd36
+* f2df2c97f8cb7b7683cac3ac3b6589ac050f295306c95673608caf7847e5f189
 
 ## Shea Gateway
-* GET http://shea.kep.io/709e659d41e7e69da98a4406154732d1d86c27dd8637dd83ffc3c8c71b7196df/state
-* POST https://shea.kep.io/709e659d41e7e69da98a4406154732d1d86c27dd8637dd83ffc3c8c71b7196df/txs
+* GET http://shea.kep.io/f2df2c97f8cb7b7683cac3ac3b6589ac050f295306c95673608caf7847e5f189/state
+* POST https://shea.kep.io/f2df2c97f8cb7b7683cac3ac3b6589ac050f295306c95673608caf7847e5f189/txs
 
 ## Server Repo
 * https://github.com/okwme/goodcorp_server
